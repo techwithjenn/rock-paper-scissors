@@ -1,59 +1,69 @@
-function computerPlay() {
+let roundWinner = '';
+let computerSelection = '';
+let playerSelection = '';
+let playerScore = 0;
+let computerScore = 0;
+let result = '';
+
+function isGameOver() {
+    return playerScore === 5 || computerScore === 5
+}
+
+
+const playerScoreUpdate = document.getElementById('player-score')
+const computerScoreUpdate = document.getElementById('computer-score')
+
+function playRound(playerSelection) {
     var choices = ["rock", "paper", "scissors"]
-    var randomChoice = choices[Math.floor(Math.random() * choices.length)];
-    return randomChoice;
+    computerSelection = choices[Math.floor(Math.random() * choices.length)];
+
+    if (
+        (playerSelection === "rock" && computerSelection === "scissors") ||
+        (playerSelection === "scissors" && computerSelection === "paper") ||
+        (playerSelection === "paper" && computerSelection === "rock")) {
+        playerScore += 1
+        roundWinner = 'player'
+        result = 'Congrats, you won this round.'
+
+        playerScoreUpdate.innerHTML = 'Player Score: ' + playerScore;
+    }
+    if (
+        (playerSelection === "rock" && computerSelection == "paper") ||
+        (playerSelection === "scissors" && computerSelection == "rock") ||
+        (playerSelection === "paper" && computerSelection === "scissors")) {
+        computerScore += 1
+        result = 'Sorry, the computer won this round.'
+        computerScoreUpdate.innerHTML = 'Computer Score: ' + computerScore;
+        roundWinner = 'computer';
+    }
+    if (playerSelection === computerSelection) {
+        roundWinner = 'tie'
+        result = 'Well, it was a tie!'
+    }
+    resultInfo = document.getElementById('result')
+    resultInfo.textContent = result;
 }
 
-function playRound() {
-    let playerSelection = prompt("Choose: rock, paper, scissors").toLowerCase();
-    let computerSelection = computerPlay();
-    if (playerSelection == "rock") {
-        if (computerSelection == "scissors") {
-            return 1;
-        }
-        if (computerSelection == "paper") {
-            return 0;
-        }
-        if (computerSelection == "rock") {
-            return 2;
-        }
-    }
-    if (playerSelection == "scissors") {
-        if (computerSelection == "scissors") {
-            return 2;
-        }
-        if (computerSelection == "paper") {
-            return 1;
-        }
-        if (computerSelection == "rock") {
-            return 0;
-        }
-    }
-    if (playerSelection == "paper") {
-        if (computerSelection == "scissors") {
-            return 0;
-        }
-        if (computerSelection == "paper") {
-            return 2;
-        }
-        if (computerSelection == "rock") {
-            return 1;
-        }
-    }
-}
 
-function getWinner() {
-    if (playRound() == 2) {
-        console.log("It's a tie!")
-    }
-    else if (playRound() == 0) {
-        console.log("Player wins!")
-    }
-    else if (playRound() == 2) {
-        console.log("Computer wins!")
-    }
-}
 
-getWinner();
+const buttons = document.querySelectorAll('button')
+
+buttons.forEach(elem => {
+    elem.addEventListener('click', function() {
+        playRound(elem.id)
+        if (isGameOver()) {
+            if (playerScore === 5) {
+                result = 'Game is over! You won! Refresh the page to play again.'
+            }
+            else {
+                result = 'Game is over! The computer won! Refresh the page to play again.'
+            }
+            const weaponsBox = document.getElementById('weapons');
+            weaponsBox.style.display = 'none';
+            resultInfo = document.getElementById('result')
+            resultInfo.textContent = result;
+        }
+    }
+)})
 
 
